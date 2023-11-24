@@ -237,6 +237,9 @@ def decode_action(type_code: str):
     if type_code.startswith('EITS'):
         temp = re.findall(r'/(\w+)+', type_code)
         return f'add {temp[0]} to the service\'s inventory'
+    if type_code.startswith('DSPS'):
+        temp = re.findall(r'/(\w+)+', type_code)
+        return f'dispoe {temp[1]} stocks of {temp[0]}'
 
 def text_overflow_ellipsis(lbl: ctk.CTkLabel, width: int = None, lines: int = 1, width_padding: int = 0,):
     font_tool = ctk.CTkFont(lbl._font[0], lbl._font[1]) if isinstance(lbl._font, tuple) else lbl._font

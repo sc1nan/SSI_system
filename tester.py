@@ -34,7 +34,9 @@ class body(ctk.CTk):
         #data = database.fetch_data("select * from service_preceeding_schedule")[0][-2]
         #print(type(data + datetime.timedelta(days= 5)))
 
-        transaction_popups.svc_provider(self, self.screen).place(relx = .5, rely = .5, anchor = 'c')
+        #transaction_popups.svc_provider(self, self.screen).place(relx = .5, rely = .5, anchor = 'c')
+        mini_popup.stock_disposal(self, self.screen + ([['Cherrie']],), None).place(relx = .5, rely = .5, anchor = 'c', data = ())
+
         self.mainloop()
 
         '''self.entry = ctk.CTkEntry(self, font= ('Arial', 24))

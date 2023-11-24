@@ -1921,6 +1921,10 @@ class inventory_frame(ctk.CTkFrame):
         self.page_counter = cctk.cctkPageNavigator(self.bot_frame,  width=width*0.125, height=height*0.0575, fg_color=Color.White_Platinum, page_fg_color=Color.White_Lotion, 
                                              font=("DM Sans Medium", 14), page_limit=1, disable_timer=100, command=page_callback)
         self.page_counter.place(relx=0.5,rely=0.5, anchor="c")
+
+        self.dispose_btn = ctk.CTkButton(self.bot_frame, width=width*0.1, height = height*0.05, text="Dispose", image=Icons.get_image('trash_icon', (20,17)), font=("DM Sans Medium", 14), fg_color= Color.Red_Pastel,
+                                        command= lambda : self.dispose_popup.place(relx = .5, rely = .5, anchor = 'c', data= self.data_view1.get_selected_data()))
+        self.dispose_btn.place(relx=0.87,rely=0.5, anchor='e')
         
         self.restock_btn = ctk.CTkButton(self.bot_frame, width=width*0.1, height = height*0.05, text="Stock Order", image=Icons.get_image('restock_icon', (20,17)), font=("DM Sans Medium", 14),
                                         command= lambda : self.restock_popup.place(default_data=self.data_view1.get_selected_data() or None, update_cmds=self.update_tables, relx = .5, rely = .5, anchor = 'c'))
@@ -2204,6 +2208,7 @@ class inventory_frame(ctk.CTkFrame):
         self.history_popup = Inventory_popup.receive_history(self, (width, height, acc_cred, acc_info))
         self.cancel_orders = Inventory_popup.cancel_orders(self, (width, height, acc_cred, acc_info))
         self.restock_popup = Inventory_popup.restock(self, (width, height, acc_cred, acc_info), self.rs_data_view1, command_callback=refresh_rs_data_view1)
+        self.dispose_popup = mini_popup.stock_disposal(self, (width, height, acc_cred, acc_info), lambda: None)
         self.add_item_popup = Inventory_popup.add_item(self, (width, height, acc_cred, acc_info), command_callback=update_table_callback)
         self.supplier_list_popup = Inventory_popup.supplier_list(self,(width, height, acc_cred, acc_info))
         self.category_popup = Inventory_popup.show_category(self, (width, height, acc_cred, acc_info))

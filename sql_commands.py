@@ -1476,3 +1476,10 @@ get_all_service_schedule_by_id = "SELECT DATE_FORMAT(scheduled_date, '%m/%d/%y')
                                   SELECT DATE_FORMAT(scheduled_date, '%m/%d/%y') FROM service_preceeding_schedule\
                                   WHERE transaction_uid = ?"
 
+get_uid_by_brand_and_mofidied_name = "SELECT uid FROM item_general_info WHERE (brand = ? AND CONCAT(NAME, ' (', unit,')') = ? AND unit IS NOT NULL) OR (brand = ? AND NAME = ?)"
+get_all_expiry_of_items_by_id = "SELECT DATE_FORMAT(expiry_date, '%b %d, %Y') FROM item_inventory_info WHERE uid = ? ORDER BY expiry_date ASC"
+get_all_item_quantity_by_id = "SELECT CAST(COALESCE(SUM(stock), 0) AS INT) FROM item_inventory_info WHERE uid = ?"
+get_all_item_quantity_by_id_and_expiry = "SELECT CAST(COALESCE(SUM(stock), 0) AS INT) FROM item_inventory_info WHERE uid = ? AND expiry_date = ?"
+
+get_specific_stock_ordered_by_date_added_including_not_sellable = "SELECT * FROM item_inventory_info WHERE UID = ? AND (Expiry_Date IS NULL) ORDER BY added_date"
+get_specific_stock_ordered_by_date_added_including_not_sellable_for_expiry = "SELECT * FROM item_inventory_info WHERE UID = ? AND (Expiry_Date = ?)"
