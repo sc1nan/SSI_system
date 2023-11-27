@@ -917,7 +917,10 @@ get_pet_record_search_query=f"SELECT id, p_name, pet_owner_info.owner_name FROM 
 #SALES 
 get_sales_data = "SELECT transaction_uid, client_name, transaction_date, Total_amount - COALESCE(deduction, 0),  Attendant_usn FROM transaction_record WHERE transaction_date = ?"
 
-get_item_record = "SELECT  item_name, quantity, price, ROUND((quantity*price),2) AS total FROM item_transaction_content WHERE transaction_uid = ? AND STATE = 1"
+get_item_record = "SELECT  item_name, CONCAT(quantity,' ', item_general_info.stock_unit), price, ROUND((quantity*price),2) AS total\
+                    FROM item_transaction_content INNER JOIN item_general_info ON item_transaction_content.Item_uid = item_general_info.UID\
+                    WHERE transaction_uid = ? AND STATE = 1"
+
 get_service_record = "SELECT CONCAT(service_name,' - ',  'Pet: ',patient_name) AS service, 1 AS quantity, price, ROUND(price,2)AS total FROM services_transaction_content WHERE transaction_uid = ?"
 get_service_record_temp = "SELECT CONCAT(service_name) AS service, patient_name, scheduled_date, END_schedule, price, price, ROUND(price,2)AS total FROM services_transaction_content WHERE transaction_uid = ?"
 

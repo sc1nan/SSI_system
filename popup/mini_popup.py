@@ -206,18 +206,17 @@ def stock_disposal(master, info:tuple, command_callback: callable = None):
             '''PLACEMENT'''
             # Inventory_popup.stock_disposal(self,(width, height, acc_cred, acc_info), command_callback=None).place(relx=0.5, rely=0.5,anchor='c')
         def proceed(self):
-            date = datetime.strptime(self.expiry_selection.get(), '%b %d, %Y')
-
-            if date > datetime.now() and 'Expired' in self.disposal_entry.get():
-                messagebox.showerror("Cannot proceed","Item aren't expired yet", parent = self)
-                return
-            
             if self.disposal_entry.get() == "Select a Reason":
                 messagebox.showerror("Cannot proceed","Select a reason to continue", parent = self)
                 return
             
-            if self.is_expiry_type:
+            if not self.is_expiry_type:
+                """ date = datetime.strptime(self.expiry_selection.get(), '%b %d, %Y')
+                if date > datetime.now() and 'Expired' in self.disposal_entry.get():
+                    messagebox.showerror("Cannot proceed","Item aren't expired yet", parent = self)
+                    return """
                 quantity_needed = self.stock_entry.get()
+                
                 stocks = database.fetch_data(sql_commands.get_specific_stock_ordered_by_date_added_including_not_sellable, (self.uid, ))
                 
                 for st in stocks:
@@ -233,8 +232,12 @@ def stock_disposal(master, info:tuple, command_callback: callable = None):
                         quantity_needed -= st[2]
                         #if the stock needed is higher than stock instance
             else:
+                date = datetime.strptime(self.expiry_selection.get(), '%b %d, %Y')
+                if date > datetime.now() and 'Expired' in self.disposal_entry.get():
+                    messagebox.showerror("Cannot proceed","Item aren't expired yet", parent = self)
+                    return
                 quantity_needed = self.stock_entry.get()
-                stocks = database.fetch_data(sql_commands.get_specific_stock_ordered_by_date_added_including_not_sellable_for_expiry, (self.uid, ))
+                stocks = database.fetch_data(sql_commands.get_specific_stock_ordered_by_date_added_including_not_sellable_for_expiry, (self.uid, date))
                 
                 for st in stocks:
                     if st[2] == quantity_needed and st == stocks[-1]:

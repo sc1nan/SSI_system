@@ -450,7 +450,8 @@ def change_order(master, info:tuple) -> ctk.CTkFrame:
                 self.service_total = format_price(database.fetch_data(sql_commands.get_service_total_by_id, (info,))[0][0] or 0)
                 
                 
-                self.items = items
+                self.items = [(item[0], int(item[1].split()[0]), item[2], item[3]) for item in items]
+                
                 self.set_values()
                 self.set_table()
                 return super().place(**kwargs)
@@ -675,6 +676,7 @@ def removed_items(master, info:tuple, command_callback:callable = None) -> ctk.C
         
           
         def place(self, info, data, **kwargs):
+            print(info, data)
             self.info = info
             self.data = data
             self.set_table()
@@ -1126,6 +1128,7 @@ def view_removed_items(master, info:tuple, command_callback:callable = None) -> 
             
           
         def set_table(self):
+            print(self.data)
             self.or_label.configure(text=self.info[0])
             self.client_name_label.configure(text=self.info[1])
             self.item_treeview.update_table(self.data)
