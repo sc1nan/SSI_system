@@ -701,8 +701,8 @@ def generate_report(report_type: str, acc_name_preparator: str, acc_full_name: s
             total_income_temp = total_item_income_temp + total_service_income_temp
         #for daily sales
         if not include_vbarchart:
-            d.add(Rect(120, 215, 380, 280, fillColor=colors.transparent, strokeColor=colors.gray))
-            d.add(String(265,470, 'Daily Sales', fontName = 'Times-New-Roman', fontSize=16))
+            d.add(Rect(120, 185, 380, 280, fillColor=colors.transparent, strokeColor=colors.gray))
+            d.add(String(265,450, 'Daily Sales', fontName = 'Times-New-Roman', fontSize=16))
         #create piechart
         pc = Pie()
         pc.x = piechart_x
@@ -923,8 +923,7 @@ def generate_report(report_type: str, acc_name_preparator: str, acc_full_name: s
                         ['SJDM City, Bulacan Hardware 2000 Bldg.'],
                             ['Brgy. Graceville, SJDM City, Bulacan'],
                             ['Tel.: 8994-9043'],
-                            ['Cel.: 0922-976-9287 / 0927-887-0270 /'],
-                            [' 0922-408-7709']]
+                            ['Cel.: 0922-976-9287 / 0927-887-0270 / 0922-408-7709']]
         report_header = Table(report_header_temp)
         tbl_header_style = TableStyle(
             [
@@ -1099,8 +1098,7 @@ def generate_report(report_type: str, acc_name_preparator: str, acc_full_name: s
                         ['SJDM City, Bulacan Hardware 2000 Bldg.'],
                             ['Brgy. Graceville, SJDM City, Bulacan'],
                             ['Tel.: 8994-9043'],
-                            ['Cel.: 0922-976-9287 / 0927-887-0270 /'],
-                            [' 0922-408-7709']]
+                            ['Cel.: 0922-976-9287 / 0927-887-0270 / 0922-408-7709']]
         report_header = Table(report_header_temp)
         tbl_header_style = TableStyle(
             [
@@ -1251,8 +1249,7 @@ def generate_report(report_type: str, acc_name_preparator: str, acc_full_name: s
                         ['SJDM City, Bulacan Hardware 2000 Bldg.'],
                             ['Brgy. Graceville, SJDM City, Bulacan'],
                             ['Tel.: 8994-9043'],
-                            ['Cel.: 0922-976-9287 / 0927-887-0270 /'],
-                            [' 0922-408-7709']]
+                            ['Cel.: 0922-976-9287 / 0927-887-0270 / 0922-408-7709']]
         report_header = Table(report_header_temp)
         tbl_header_style = TableStyle(
             [
@@ -1265,7 +1262,7 @@ def generate_report(report_type: str, acc_name_preparator: str, acc_full_name: s
             ('FONTSIZE', (0, 1), (0, -1), 12),
             #space at the bottom
             ('BOTTOMPADDING', (0, 0), (0, 0), 20),
-            ('BOTTOMPADDING', (0, len(report_header_temp)-1), (0, len(report_header_temp)-1), 25),
+            ('BOTTOMPADDING', (0, len(report_header_temp)-1), (0, len(report_header_temp)-1), 20),
             ]
         )
 
@@ -1301,7 +1298,7 @@ def generate_report(report_type: str, acc_name_preparator: str, acc_full_name: s
             #font style
             ('FONTNAME', (0, 0), (0, 0), 'Times-New-Roman-Bold'),
             ('FONTNAME', (0, 1), (-1, -1), 'Times-New-Roman'),
-            ('FONTSIZE', (0, 0), (-1, -1), 16),
+            ('FONTSIZE', (0, 0), (-1, -1), 14),
             #space at the bottom
             ('BOTTOMPADDING', (0, 0), (-1, -1), 10),
             ('LEFTPADDING', (1, 0), (1, -1), 10),
@@ -1395,7 +1392,7 @@ def generate_report(report_type: str, acc_name_preparator: str, acc_full_name: s
         footer_generator(len(p1.pages))
         p2 = pdfrw1("image/footer.pdf")
         if include_graphs:
-            chart_generator(data_temp[0] , data_temp[1], 0, [''], 'Daily',  '', 231, 270, 150, 150, 0, [265,380])
+            chart_generator(data_temp[0] , data_temp[1], 0, [''], 'Daily',  '', 231, 245, 150, 150, 0, [265,380])
             p3 = pdfrw1("image/charts.pdf")
         footer_gen2()
         p4 = pdfrw1("image/footer2.pdf")
@@ -1580,8 +1577,7 @@ def generate_inventory_report(acc_name_preparator: str, file_name: str, acc_full
                     ['SJDM City, Bulacan Hardware 2000 Bldg.'],
                         ['Brgy. Graceville, SJDM City, Bulacan'],
                         ['Tel.: 8994-9043'],
-                        ['Cel.: 0922-976-9287 / 0927-887-0270 /'],
-                        [' 0922-408-7709']]
+                        ['Cel.: 0922-976-9287 / 0927-887-0270 / 0922-408-7709']]
     report_header = Table(report_header_temp)
     tbl_header_style = TableStyle(
         [
@@ -1610,7 +1606,6 @@ def generate_inventory_report(acc_name_preparator: str, file_name: str, acc_full
     ctr = 0
     for x in inventory_report_data:
         temp_data = []
-        #temp_data.append(x[3])
         #new comment, not yet applied for quantity unit name
         #comment by chris
         length_counter = 0

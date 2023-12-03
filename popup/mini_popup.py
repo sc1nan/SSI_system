@@ -210,28 +210,7 @@ def stock_disposal(master, info:tuple, command_callback: callable = None):
                 messagebox.showerror("Cannot proceed","Select a reason to continue", parent = self)
                 return
             
-            if not self.is_expiry_type:
-                """ date = datetime.strptime(self.expiry_selection.get(), '%b %d, %Y')
-                if date > datetime.now() and 'Expired' in self.disposal_entry.get():
-                    messagebox.showerror("Cannot proceed","Item aren't expired yet", parent = self)
-                    return """
-                quantity_needed = self.stock_entry.get()
-                
-                stocks = database.fetch_data(sql_commands.get_specific_stock_ordered_by_date_added_including_not_sellable, (self.uid, ))
-                
-                for st in stocks:
-                    if st[2] == quantity_needed and st == stocks[-1]:
-                        database.exec_nonquery([[sql_commands.null_stocks_by_id, (st[0], )]])
-                    elif st[2] > quantity_needed:
-                        database.exec_nonquery([[sql_commands.deduct_stocks_by_id, (quantity_needed, st[0])]])
-                        quantity_needed = 0
-                        break
-                        #if the  stock of an instance is higher than needed stock
-                    elif st[2] <= quantity_needed:
-                        database.exec_nonquery([[sql_commands.delete_stocks_by_id, (st[0], )]])
-                        quantity_needed -= st[2]
-                        #if the stock needed is higher than stock instance
-            else:
+            if self.is_expiry_type:
                 date = datetime.strptime(self.expiry_selection.get(), '%b %d, %Y')
                 if date > datetime.now() and 'Expired' in self.disposal_entry.get():
                     messagebox.showerror("Cannot proceed","Item aren't expired yet", parent = self)
@@ -251,13 +230,34 @@ def stock_disposal(master, info:tuple, command_callback: callable = None):
                         database.exec_nonquery([[sql_commands.delete_stocks_by_id, (st[0], )]])
                         quantity_needed -= st[2]
                         #if the stock needed is higher than stock instance
+            else:
+                date = datetime.strptime(self.expiry_selection.get(), '%b %d, %Y')
+                if date > datetime.now() and 'Expired' in self.disposal_entry.get():
+                    messagebox.showerror("Cannot proceed","Item aren't expired yet", parent = self)
+                    return
+                quantity_needed = self.stock_entry.get()
+                stocks = database.fetch_data(sql_commands.get_specific_stock_ordered_by_date_added_including_not_sellable, (self.uid, ))
+                
+                for st in stocks:
+                    if st[2] == quantity_needed and st == stocks[-1]:
+                        database.exec_nonquery([[sql_commands.null_stocks_by_id, (st[0], )]])
+                    elif st[2] > quantity_needed:
+                        database.exec_nonquery([[sql_commands.deduct_stocks_by_id, (quantity_needed, st[0])]])
+                        quantity_needed = 0
+                        break
+                        #if the  stock of an instance is higher than needed stock
+                    elif st[2] <= quantity_needed:
+                        database.exec_nonquery([[sql_commands.delete_stocks_by_id, (st[0], )]])
+                        quantity_needed -= st[2]
+                        #if the stock needed is higher than stock instance
             record_action(self.acc_user, action.DISPOSAL_TYPE, action.ITEM_DISPOSAL % (self.uid, self.stock_entry.get(), self.acc_user))
             database.exec_nonquery([[sql_commands.set_expired_items_from_inventory, (generateId("DIS",6).upper(), None, self.uid, self.data[2], self.stock_entry.get(), self.disposal_entry.get(), self.acc_user)]])
-            messagebox.showinfo("Success", "Itemp Dispose\nNote! this will be recorded")
+            messagebox.showinfo("Success", "Itemp Dispose\nNote! this will be recorded", parent = self)
             self.stock_entry.set(1)
             self.reset()
         
         def reset(self):
+            self.command_callback()
             self.place_forget()
 
         def set_quantity_limit(self):

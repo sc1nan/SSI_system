@@ -1,9 +1,21 @@
+import json
+
+DB_CRED: dict = json.load(open("Resources\\db_settings.json"))
+IP_Address: dict = json.load(open("Resources\\network_settings.json"))
+
 class db:
+    DB_USERNAME = DB_CRED['user']
+    DB = DB_CRED['database']
+    PORT = DB_CRED['port_no']
+    HOST = IP_Address['ADMIN_IP']
+    PASSWORD = DB_CRED['password']
+
+    """DB_NAME = 'ssi'
     DB = 'ssi1'
     PORT = 3306
     HOST = '127.0.0.1'
     PASSWORD = 'hello123'
-    #USERNAME = 'root'
+    #USERNAME = 'root'"""
 
     ACC_CRED = 'acc_cred'
     USERNAME = 'usn'
@@ -46,4 +58,3 @@ class action:
     VOID_INVOICE = 'INVV/%s/%s/%s' #usn, #authorization, invoice_uid
     ENCODE_ITEM_TO_SVC = 'EITS/%s/%s' #uid of item, acc
     ITEM_DISPOSAL = 'DPSP/%s/%s/%s' #uid, stock, acc
-

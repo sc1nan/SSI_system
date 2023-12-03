@@ -131,11 +131,8 @@ class dashboard(ctk.CTkToplevel):
         
         global acc_info, acc_cred, date_logged, mainframes, IP_Address, PORT_NO
 
-
         """ 
         datakey = database.fetch_data(f'SELECT {db.USERNAME} from {db.ACC_CRED} where {db.acc_cred.ENTRY_OTP} = ?', (entry_key, ))
-
-
         if not datakey or entry_key == None:
             messagebox.showwarning('Warning', 'Invalid entry method\ngo to log in instead')
             self.destroy()
@@ -149,10 +146,6 @@ class dashboard(ctk.CTkToplevel):
             del datakey
         #for preventing security breach through python code; enable it to test it """
         #for preventing security breach through python code; enable it to test it """
-        
-        
-        
-        
         
         acc_cred = database.fetch_data(f'SELECT * FROM {db.ACC_CRED} where {db.USERNAME} = ?', (entry_key, ))
         acc_info = database.fetch_data(f'SELECT * FROM {db.ACC_INFO} where {db.USERNAME} = ?', (entry_key, ))
@@ -1248,7 +1241,6 @@ class customer_frame(ctk.CTkFrame):
         self.refresh_btn.after(100, lambda: self.refresh_btn.configure(state = ctk.NORMAL))
         self.no_data_label.place(relx=0.5, rely=0.5, anchor='c') if not temp else self.no_data_label.place_forget()
 
-
 class services_frame(ctk.CTkFrame):
     global width, height, IP_Address, PORT_NO
     def __init__(self, master):
@@ -1348,10 +1340,7 @@ class services_frame(ctk.CTkFrame):
                                                column_format=f'/No:{int(width*.035)}-#r/ServiceCode:{int(width*.125)}-tc/ServiceName:x-tl/Duration:{int(width*.175)}-tl/Price:{int(width*.115)}-tr!33!35')
         self.services_treeview.pack()
         
-        
         """SERVICE ITEMS"""
-        
-        
         self.svc_button_frame = ctk.CTkFrame(self.service_item_frame, fg_color='transparent', corner_radius=0, height=height*0.055)
         self.svc_button_frame.pack_propagate(0)
         self.svc_button_frame.pack(fill="x", expand = 1, padx=(width*0.005), pady=(width*0.005))
@@ -1379,13 +1368,9 @@ class services_frame(ctk.CTkFrame):
         self.svc_item_treeview.pack()
 
         load_main_frame(0)
-        
         self.add_service_item = Inventory_popup.add_service_item(self, (width, height), command_callback= None)
         self.deplted_history = Inventory_popup.deplted_history(self, (width, height))
-        
-        
         """SERVICE ITEMS"""
-        
         
         self.svc_button_frame = ctk.CTkFrame(self.service_item_frame, fg_color='transparent', corner_radius=0, height=height*0.055)
         self.svc_button_frame.pack_propagate(0)
@@ -1408,14 +1393,7 @@ class services_frame(ctk.CTkFrame):
                                                column_format=f'/No:{int(width*.035)}-#r/ItemBrand:{int(width*.125)}-tc/ItemDescription:x-tl/Status:{int(width*.175)}-tl/ExpirationDate:{int(width*.115)}-tr/Action:{int(width*.085)}-bD!33!35',
                                                bd_message="Are you sure you want to remove one (1) quantity of this item?")
         self.svc_item_treeview.pack()
-        
-        
-        
-        
-        
-        
-        
-        
+        self.update_items_svc()
         
         def svc_item_bd_command (m):
             data = self.svc_item_treeview._data[m]
@@ -2208,7 +2186,7 @@ class inventory_frame(ctk.CTkFrame):
         self.history_popup = Inventory_popup.receive_history(self, (width, height, acc_cred, acc_info))
         self.cancel_orders = Inventory_popup.cancel_orders(self, (width, height, acc_cred, acc_info))
         self.restock_popup = Inventory_popup.restock(self, (width, height, acc_cred, acc_info), self.rs_data_view1, command_callback=refresh_rs_data_view1)
-        self.dispose_popup = mini_popup.stock_disposal(self, (width, height, acc_cred, acc_info), lambda: None)
+        self.dispose_popup = mini_popup.stock_disposal(self, (width, height, acc_cred, acc_info), update_table_callback)
         self.add_item_popup = Inventory_popup.add_item(self, (width, height, acc_cred, acc_info), command_callback=update_table_callback)
         self.supplier_list_popup = Inventory_popup.supplier_list(self,(width, height, acc_cred, acc_info))
         self.category_popup = Inventory_popup.show_category(self, (width, height, acc_cred, acc_info))
@@ -3240,8 +3218,7 @@ class histlog_frame(ctk.CTkFrame):
         self.attempts_treeview.pack_forget()
         self.attempts_treeview.update_table(database.fetch_data("Select COALESCE(attempt_usn, '<None>'), usn_used, DATE_FORMAT(date_created, '%M %d, %Y at %h:%i %p') from login_report"))
         self.attempts_treeview.pack()
-        
-            
+                  
 class admin_settings_frame(ctk.CTkFrame):
     global width, height, IP_Address, PORT_NO
     def __init__(self, master):
@@ -3441,5 +3418,4 @@ class admin_settings_frame(ctk.CTkFrame):
         self.load_inventory_data()
         self.load_service_data()    
 
-
-dashboard(None, 'admin', datetime.datetime.now())
+#dashboard(None, 'admin', datetime.datetime.now())

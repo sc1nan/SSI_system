@@ -28,7 +28,7 @@ class encrypt:
 class database:
     def fetch_db_profile():
         try:
-            mdb = mariadb.connect(user= 'root', password= db.PASSWORD, host= db.HOST, port= db.PORT, database= db.DB)
+            mdb = mariadb.connect(user= db.DB_USERNAME, password= db.PASSWORD, host= db.HOST, port= db.PORT, database= db.DB)
             return mdb
         except mariadb.Error as e:
             print(e)

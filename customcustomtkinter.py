@@ -2,6 +2,8 @@ from typing import Optional, Tuple, Union
 import customtkinter as ctk
 import tkinter as tk
 from typing import *
+
+from customtkinter.windows.widgets.font import CTkFont
 from util import *
 from functools import partial
 from util import brighten_color
@@ -11,6 +13,7 @@ from tkcalendar import Calendar
 import datetime
 from PIL import Image
 import sql_commands
+import sys
 
 class customcustomtkinter:
     class ctkButtonFrame(ctk.CTkFrame):
@@ -1032,7 +1035,137 @@ class customcustomtkinter:
                 
                 return super().place(**kwargs)
                 
-        return instance(master, info)  
+        return instance(master, info)
+    
+    class num_entry(ctk.CTkEntry):
+        def __init__(self, master: any, width: int = 140, height: int = 28, corner_radius: int | None = None, border_width: int | None = None,
+                     bg_color: str | Tuple[str, str] = "transparent", fg_color: str | Tuple[str, str] | None = None,
+                     border_color: str | Tuple[str, str] | None = None, text_color: str | Tuple[str, str] | None = None,
+                     placeholder_text_color: str | Tuple[str, str] | None = None, textvariable= None, placeholder_text: str | None = None,
+                     font: tuple | CTkFont | None = None, state: str = ctk.NORMAL, max_val: int = sys.maxsize,
+                     before_modify_callback: callable = None, after_modify_callback: callable = None, **kwargs):
+            super().__init__(master, width, height, corner_radius, border_width, bg_color, fg_color, border_color, text_color, placeholder_text_color, textvariable, placeholder_text, font, state, **kwargs)
+            self._before_modify_callback = before_modify_callback
+            self._after_modify_callback = after_modify_callback
+
+
+            def check_for_number():
+                if callable(self._before_modify_callback):
+                    self._before_modify_callback()
+
+                num = self.get() or '0'
+                char_format = "0123456789"
+
+                for i in range(len(num)):
+                    if num[i] not in char_format:
+                        self.delete(i, i+1)
+                
+                num = self.get() or '0'
+
+                if int(num[0]) == 0 and len(num) > 1:
+                    self.delete(0, 1)
+
+                if int(num) > max_val:
+                    self.delete(0, ctk.END)
+                    self.insert(0, max_val)
+
+                if callable(self._after_modify_callback):
+                    self._after_modify_callback()
+        
+            self.configure(textvariable = customcustomtkinterutil.entry_limiter(len(str(sys.maxsize)), self, check_for_number))
+
+        def configure(self, require_redraw=False, **kwargs):
+            if 'before_modify_callback' in kwargs:
+                self._before_modify_callback = kwargs['before_modify_callback']
+                kwargs.pop('before_modify_callback')
+            if 'after_modify_callback' in kwargs:
+                self._after_modify_callback = kwargs['after_modify_callback']
+                kwargs.pop('after_modify_callback')
+            return super().configure(require_redraw, **kwargs)
+        
+        def get(self):
+            return super().get()
+        
+    class ip_entry(ctk.CTkFrame):
+        def __init__(self, master: any, width: int = 200, height: int = 200, fg_color: str | Tuple[str, str] | None = None, font: Tuple[str, int] = ("Arial", 12), border_color: str | Tuple[str, str] | None = None, **kwargs):
+            super().__init__(master, width, height, 0, 2 if border_color != None else 0, 'transparent', fg_color, border_color or 'black', None, None, **kwargs)
+
+            self.width = width
+            self.height = height
+            self.screen = (self.width, self.height)
+            self.pack_propagate(0)
+
+            entry_spaces = .2
+
+            self.octet1 = customcustomtkinter.num_entry(self, self.width * entry_spaces, self.height * .9, 0, placeholder_text= '255', fg_color= 'transparent', border_width= 0, font= font, max_val= 255)
+            self.octet1._entry.configure(justify= ctk.CENTER)
+            self.octet1.pack(side = ctk.LEFT, padx = (self.width * .01 , self.width * .0283))
+
+            ctk.CTkLabel(self, text = '.').pack(side = ctk.LEFT, padx = (0, self.width * .0283), pady = (0, self.width * 0.006), anchor = 's')
+
+            self.octet2 = customcustomtkinter.num_entry(self, self.width * entry_spaces, self.height * .9, 0, placeholder_text= '255', fg_color= 'transparent', border_width= 0, font= font, max_val= 255)
+            self.octet2._entry.configure(justify= ctk.CENTER)
+            self.octet2.pack(side = ctk.LEFT, padx = (0, self.width * .0283))
+
+            ctk.CTkLabel(self, text = '.').pack(side = ctk.LEFT, padx = (0, self.width * .0283), pady = (0, self.width * 0.006), anchor = 's')
+
+            self.octet3 = customcustomtkinter.num_entry(self, self.width * entry_spaces, self.height * .9, 0, placeholder_text= '255', fg_color= 'transparent', border_width= 0, font= font, max_val= 255)
+            self.octet3._entry.configure(justify= ctk.CENTER)
+            self.octet3.pack(side = ctk.LEFT, padx = (0, self.width * .0283))
+
+            ctk.CTkLabel(self, text = '.').pack(side = ctk.LEFT, padx = (0, self.width * .0283), pady = (0, self.width * 0.006), anchor = 's')
+
+            self.octet4 = customcustomtkinter.num_entry(self, self.width * entry_spaces, self.height * .9, 0, placeholder_text= '255', fg_color= 'transparent', border_width= 0, font= font, max_val= 255)
+            self.octet4._entry.configure(justify= ctk.CENTER)
+            self.octet4.pack(side = ctk.LEFT, padx = (self.width * .01))
+
+            def next_focus(cur_entry: ctk.CTkEntry, next_entry: ctk.CTkEntry):
+                if cur_entry.get() != '':
+                    if (cur_entry.get()[-1] or 0) == '.':
+                        next_entry.focus_force()
+
+            def auto_full_focus(cur_entry: ctk.CTkEntry, next_entry: ctk.CTkEntry):
+                if len(cur_entry.get()) == 3:
+                    next_entry.focus_force()
+
+            self.octet1.configure(before_modify_callback = lambda: next_focus(self.octet1, self.octet2),
+                                after_modify_callback = lambda: auto_full_focus(self.octet1, self.octet2))
+            self.octet2.configure(before_modify_callback = lambda: next_focus(self.octet2, self.octet3),
+                                after_modify_callback = lambda: auto_full_focus(self.octet2, self.octet3))
+            self.octet3.configure(before_modify_callback = lambda: next_focus(self.octet3, self.octet4),
+                                after_modify_callback = lambda: auto_full_focus(self.octet3, self.octet4))
+
+            self.entries = [self.octet1, self.octet2, self.octet3, self.octet4]
+
+        def getIP(self):
+            return ".".join([str(s.get()) or "0" for s in self.entries])
+        
+        def setIP(self, ip_address: str):
+            if re.search(r'^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$', ip_address):
+                octets = ip_address.split('.')
+                for i in range(len(self.entries)):
+                    self.entries[i].delete(0, ctk.END)
+                    self.entries[i].insert(0, octets[i])
+
+        def configure(self, require_redraw=False, **kwargs):
+            if 'state' in kwargs:
+                if kwargs['state'] == ctk.NORMAL:
+                    self.octet1.configure(state = ctk.NORMAL)
+                    self.octet2.configure(state = ctk.NORMAL)
+                    self.octet3.configure(state = ctk.NORMAL)
+                    self.octet4.configure(state = ctk.NORMAL)
+                elif kwargs['state'] == ctk.DISABLED or kwargs['state'] == 'readonly':
+                    if(kwargs['state'] == ctk.DISABLED):
+                        self.octet1.delete(0, ctk.END)
+                        self.octet2.delete(0, ctk.END)
+                        self.octet3.delete(0, ctk.END)
+                        self.octet4.delete(0, ctk.END)
+                    self.octet1.configure(state = ctk.DISABLED)
+                    self.octet2.configure(state = ctk.DISABLED)
+                    self.octet3.configure(state = ctk.DISABLED)
+                    self.octet4.configure(state = ctk.DISABLED)
+                kwargs.pop('state')
+            return super().configure(require_redraw, **kwargs)
          
 class customcustomtkinterutil:
     class button_manager:
